@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:42:51
+@LastEditTime: 2020-03-12 18:50:52
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -23,6 +23,17 @@ from utils.init import init_checkpoint, init_pretraining_params
 from finetune.classifier import create_model
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--init_checkpoint", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/params', type=str, help=".")
+parser.add_argument("--ernie_config_path", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/ernie_config.json', type=str, help=".")
+parser.add_argument("--max_seq_len", default=128, type=int, help=".")
+parser.add_argument("--num_labels", default=2, type=int, help=".")
+parser.add_argument("--use_fp16", type=bool, default=False, help="Whether to use fp16 mixed precision training.")
+
+args = parser.parse_args()
+
+
+
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
@@ -33,21 +44,12 @@ for gpu in gpus:
 def check_exists(filepath):
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'{filepath} not exists.')
-    return filepath
 
 
-def convert_paddle_to_np(ernie_path, max_seq_len=128, num_labels=2, use_fp16=False, **options):
+def convert_paddle_to_np():
 
-    ernie_path = check_exists(ernie_path)
-    init_checkpoint = check_exists(os.path.join(ernie_path, 'params'))
-    ernie_config_path = check_exists(os.path.join(ernie_path, 'ernie_config.json'))
-
-    class args:
-        init_checkpoint = init_checkpoint
-        ernie_config_path = ernie_config_path
-        max_seq_len =  max_seq_len
-        num_labels = num_labels
-        use_fp16 = use_fp16
+    check_exists(args.init_checkpoint)
+    check_exists(args.ernie_config_path)
 
     ernie_config = ErnieConfig(args.ernie_config_path)
     ernie_config.print_config()
@@ -183,6 +185,5 @@ def save_tensor(paddle_params_np):
 
 
 if __name__ == "__main__":
-    ernie_path = '/media/xddz/xddz/data/ERNIE_stable-1.0.1'
-    convert_paddle_to_np(ernie_path)
+    convert_paddle_to_np()
     save_tensor('params.dict')
