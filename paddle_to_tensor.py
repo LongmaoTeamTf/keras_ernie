@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:00:07
+@LastEditTime: 2020-03-12 21:18:12
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -198,7 +198,7 @@ def add_bert_config(bert_config_path='checkpoints/bert_config.json'):
         "type_vocab_size": 2,
         "vocab_size": 18000}
     with open(bert_config_path, 'w', encoding='utf8') as f:
-        f.write(json.dumps(bert_config))
+        f.write(json.dumps(bert_config, indent=4))
 
 
 def save_tensor(paddle_params_np='params.dict'):
