@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 19:26:42
+@LastEditTime: 2020-03-12 19:29:33
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -182,7 +182,7 @@ def save_tensor(paddle_params_np='params.dict'):
                 if not os.path.exists(checkpoint_dir):
                     os.makedirs(checkpoint_dir)
                 saver.save(sess, checkpoint_prefix)
-    shutil.copyfile(args.init_checkpoint, os.path.join(checkpoint_dir, 'bert_config.json'))
+    shutil.copyfile(args.ernie_config_path, os.path.join(checkpoint_dir, 'bert_config.json'))
 
 
 
