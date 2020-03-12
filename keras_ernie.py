@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 19:18:45
+@LastEditTime: 2020-03-12 19:32:29
 '''
 import os
 from keras_bert import load_trained_model_from_checkpoint
@@ -17,11 +17,10 @@ from paddle_to_tensor import save_tensor
 
 def load_from_checkpoint(bert_path, trainable=False, training=False, seq_len=None, name='bert_layer'):
     
+    check_exists(bert_path)
+
     bert_config_path = os.path.join(bert_path, 'bert_config.json')
     bert_checkpoint_path = os.path.join(bert_path, 'bert_model.ckpt')
-    
-    check_exists(bert_config_path)
-    check_exists(bert_checkpoint_path)
 
     model = load_trained_model_from_checkpoint(
             bert_config_path, bert_checkpoint_path, training=training, seq_len=seq_len)
