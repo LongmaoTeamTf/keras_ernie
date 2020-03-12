@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:58:28
+@LastEditTime: 2020-03-13 00:40:39
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -26,31 +26,34 @@ from finetune.classifier import create_model
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--init_checkpoint", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/params', type=str, help=".")
-parser.add_argument("--ernie_config_path", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/ernie_config.json', type=str, help=".")
-parser.add_argument("--ernie_vocab_path", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/vocab.txt', type=str, help=".")
+parser.add_argument("--init_checkpoint", default='/root/ERNIE_stable-1.0.1/params', type=str, help=".")
+parser.add_argument("--ernie_config_path", default='/root/ERNIE_stable-1.0.1/ernie_config.json', type=str, help=".")
+parser.add_argument("--ernie_vocab_path", default='/root/ERNIE_stable-1.0.1/vocab.txt', type=str, help=".")
 parser.add_argument("--max_seq_len", default=128, type=int, help=".")
 parser.add_argument("--num_labels", default=2, type=int, help=".")
 parser.add_argument("--use_fp16", type=bool, default=False, help="Whether to use fp16 mixed precision training.")
+parser.add_argument("--use_gpu", type=bool, default=True, help='.')
+parser.add_argument("--gpu_memory_growth", type=bool, default=False, help='.')
 
 args = parser.parse_args()
 
+if not args.use_gpu:
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+if args.gpu_memory_growth:
+    gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
-
-gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
-for gpu in gpus:
-    tf.config.experimental.set_memory_growth(gpu, True)
-
-
-def check_exists(filepath):
+def check_exists(filepath: str) -> str:
     if not os.path.exists(filepath):
         raise FileNotFoundError(f'{filepath} not exists.')
+    return filepath
 
 
-def convert_paddle_to_np():
-
+def convert_paddle_to_dict(args: object, dict_path: str) -> None:
+    
     check_exists(args.init_checkpoint)
     check_exists(args.ernie_config_path)
 
@@ -76,7 +79,6 @@ def convert_paddle_to_np():
                     exe,   
                     args.init_checkpoint,
                     main_program=test_program,
-                    #main_program=startup_prog,
                     use_fp16=args.use_fp16)
 
     name2params = {}
@@ -88,7 +90,7 @@ def convert_paddle_to_np():
             print(var.name, np.array(cur_tensor).shape)
             name2params[var.name] = np.array(cur_tensor)
 
-    joblib.dump(name2params, 'params.dict')
+    joblib.dump(name2params, dict_path)
 
 
 def convert_np_to_tensor(params, training=False):
@@ -171,15 +173,16 @@ def convert_np_to_tensor(params, training=False):
         tf.Variable(tf.convert_to_tensor(params['cls_squad_out_b']), name="cls/squad/output_bias")
 
 
-def trans_vocab(bert_vocab_path='checkpoints/vocab.txt'):
-     with open(args.ernie_vocab_path, 'r', encoding='utf8') as fr:
-         with open(bert_vocab_path, 'w', encoding='utf8') as fw:
-             for line in fr:
-                 word = line.split('\t')[0]
-                 fw.write(f"{word}\n")
+def trans_vocab(ernie_vocab_path: str, bert_vocab_path: str) -> None:
+    check_exists(ernie_vocab_path)
+    with open(ernie_vocab_path, 'r', encoding='utf8') as fr:
+        with open(bert_vocab_path, 'w', encoding='utf8') as fw:
+            for line in fr:
+                word = line.split('\t')[0]
+                fw.write(f"{word}\n")
 
 
-def add_bert_config(bert_config_path='checkpoints/bert_config.json'):
+def add_bert_config(bert_config_path: str) -> None:
     bert_config = {
         "attention_probs_dropout_prob": 0.1,
         "directionality": "bidi",
@@ -202,8 +205,12 @@ def add_bert_config(bert_config_path='checkpoints/bert_config.json'):
         f.write(json.dumps(bert_config, indent=4))
 
 
-def save_tensor(paddle_params_np='params.dict'):
-    params = joblib.load(paddle_params_np)
+def save_tensor(paddle_params_dict_path: str, checkpoint_dir: str) -> None:
+    check_exists(paddle_params_dict_path)
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+        
+    params = joblib.load(paddle_params_dict_path)
     graph = tf.compat.v1.Graph()
     with graph.as_default():
         with tf.compat.v1.Session() as sess:
@@ -211,15 +218,17 @@ def save_tensor(paddle_params_np='params.dict'):
             saver = tf.compat.v1.train.Saver()
             sess.run(tf.compat.v1.global_variables_initializer())
             with sess.as_default():
-                checkpoint_dir = 'checkpoints'
                 checkpoint_prefix = os.path.join(checkpoint_dir, 'bert_model.ckpt')
-                if not os.path.exists(checkpoint_dir):
-                    os.makedirs(checkpoint_dir)
                 saver.save(sess, checkpoint_prefix)
-            trans_vocab()
-            add_bert_config()
     
 
 if __name__ == "__main__":
-    convert_paddle_to_np()
-    save_tensor()
+    ernie_version = "stable-1.0.1"
+    checkpoints_dir = os.path.join('tmp', f"ernie_{ernie_version}")
+    if not os.path.exists(checkpoints_dir):
+        os.makedirs(checkpoints_dir)
+        params_dict_path = os.path.join(checkpoints_dir, 'params.dict')
+        convert_paddle_to_dict(args, params_dict_path)
+        save_tensor(params_dict_path, checkpoints_dir)
+        trans_vocab(args.ernie_vocab_path, os.path.join(checkpoints_dir, "vocab.txt"))
+        add_bert_config(os.path.join(checkpoints_dir, 'bert_config.json'))
