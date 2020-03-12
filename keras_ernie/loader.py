@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 00:44:53
+@LastEditTime: 2020-03-13 00:48:52
 '''
 import os
 import tensorflow as tf
@@ -57,8 +57,6 @@ def load_from_checkpoint(init_checkpoint, ernie_config_path, ernie_vocab_path, e
     model.name = name
     
     return model
-
-
 
 
 if __name__ == "__main__":
