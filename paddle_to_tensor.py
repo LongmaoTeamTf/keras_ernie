@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:25:22
+@LastEditTime: 2020-03-12 21:26:47
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -88,7 +88,7 @@ def convert_paddle_to_np():
             print(var.name, np.array(cur_tensor).shape)
             name2params[var.name] = np.array(cur_tensor)
 
-    joblib.dump(name2params, 'checkpoints/params.dict')
+    joblib.dump(name2params, 'params.dict')
 
 
 def convert_np_to_tensor(params, training=False):
