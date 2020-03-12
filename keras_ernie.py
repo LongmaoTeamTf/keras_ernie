@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:41:49
+@LastEditTime: 2020-03-12 21:43:57
 '''
 import os
 import tensorflow as tf
@@ -46,4 +46,5 @@ if __name__ == "__main__":
     # model = load_from_checkpoint("checkpoints")
     # print(model.name)
     loader = checkpoint_loader("checkpoints/bert_model.ckpt")
-    print(loader)
+    for l in loader:
+        print(l)
