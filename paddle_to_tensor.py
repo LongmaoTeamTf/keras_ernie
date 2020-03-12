@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:30:29
+@LastEditTime: 2020-03-12 21:54:07
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -95,80 +95,80 @@ def convert_np_to_tensor(params, training=False):
     tensor_prefix='bert'
     # Embeddings
     tensor_embed_prefix = f"{tensor_prefix}/embeddings"
-    tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_scale'], name=f"{tensor_embed_prefix}/LayerNorm/gamma"))
-    tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_bias'], name=f"{tensor_embed_prefix}/LayerNorm/beta"))
-    tf.Variable(tf.convert_to_tensor(params['pos_embedding'], name=f"{tensor_embed_prefix}/position_embeddings"))
-    tf.Variable(tf.convert_to_tensor(params['word_embedding'], name=f"{tensor_embed_prefix}/word_embeddings"))
-    tf.Variable(tf.convert_to_tensor(params['sent_embedding'], name=f"{tensor_embed_prefix}/token_type_embeddings"))
+    tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_scale']), name=f"{tensor_embed_prefix}/LayerNorm/gamma")
+    tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_bias']), name=f"{tensor_embed_prefix}/LayerNorm/beta")
+    tf.Variable(tf.convert_to_tensor(params['pos_embedding']), name=f"{tensor_embed_prefix}/position_embeddings")
+    tf.Variable(tf.convert_to_tensor(params['word_embedding']), name=f"{tensor_embed_prefix}/word_embeddings")
+    tf.Variable(tf.convert_to_tensor(params['sent_embedding']), name=f"{tensor_embed_prefix}/token_type_embeddings")
     
     # Layers
     tensor_encoder_prefix = f"{tensor_prefix}/encoder/layer_"
     for x in range(12):
         fluid_prefix = f"encoder_layer_{x}"
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_post_att_layer_norm_scale"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/output/LayerNorm/gamma"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_post_att_layer_norm_bias"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/output/LayerNorm/beta"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_output_fc.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/output/dense/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_output_fc.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/output/dense/bias"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_key_fc.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/key/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_key_fc.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/key/bias"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_query_fc.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/query/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_query_fc.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/query/bias"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_value_fc.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/value/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_multi_head_att_value_fc.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/attention/self/value/bias"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_ffn_fc_0.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/intermediate/dense/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_ffn_fc_0.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/intermediate/dense/bias"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_post_ffn_layer_norm_scale"], 
-            name=f"{tensor_encoder_prefix}{x}/output/LayerNorm/gamma"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_post_ffn_layer_norm_bias"], 
-            name=f"{tensor_encoder_prefix}{x}/output/LayerNorm/beta"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_ffn_fc_1.w_0"], 
-            name=f"{tensor_encoder_prefix}{x}/output/dense/kernel"))
-        tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}_ffn_fc_1.b_0"], 
-            name=f"{tensor_encoder_prefix}{x}/output/dense/bias"))
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_post_att_layer_norm_scale"]),
+            name=f"{tensor_encoder_prefix}{x}/attention/output/LayerNorm/gamma")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_post_att_layer_norm_bias"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/output/LayerNorm/beta")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_output_fc.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/output/dense/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_output_fc.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/output/dense/bias")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_key_fc.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/key/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_key_fc.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/key/bias")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_query_fc.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/query/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_query_fc.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/query/bias")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_value_fc.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/value/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_multi_head_att_value_fc.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/attention/self/value/bias")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_ffn_fc_0.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/intermediate/dense/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_ffn_fc_0.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/intermediate/dense/bias")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_post_ffn_layer_norm_scale"]), 
+            name=f"{tensor_encoder_prefix}{x}/output/LayerNorm/gamma")
+        tf.Variable(
+            f.convert_to_tensor(params[f"{fluid_prefix}_post_ffn_layer_norm_bias"]), 
+            name=f"{tensor_encoder_prefix}{x}/output/LayerNorm/beta")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_ffn_fc_1.w_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/output/dense/kernel")
+        tf.Variable(
+            tf.convert_to_tensor(params[f"{fluid_prefix}_ffn_fc_1.b_0"]), 
+            name=f"{tensor_encoder_prefix}{x}/output/dense/bias")
     # Pooler
     tensor_pooler_prefix = f"{tensor_prefix}/pooler"
-    tf.Variable(tf.convert_to_tensor(params['pooled_fc.w_0'], name=f"{tensor_pooler_prefix}/dense/kernel"))
-    tf.Variable(tf.convert_to_tensor(params['pooled_fc.b_0'], name=f"{tensor_pooler_prefix}/dense/bias"))
+    tf.Variable(tf.convert_to_tensor(params['pooled_fc.w_0']), name=f"{tensor_pooler_prefix}/dense/kernel")
+    tf.Variable(tf.convert_to_tensor(params['pooled_fc.b_0']), name=f"{tensor_pooler_prefix}/dense/bias")
 
     if training:
         # Cls
-        tf.Variable(tf.convert_to_tensor(params['mask_lm_out_fc.b_0'], name="cls/predictions/output_bias"))
-        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_layer_norm_scale'], name="cls/predictions/transform/LayerNorm/gamma"))
-        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_layer_norm_bias'], name="cls/predictions/transform/LayerNorm/beta"))
-        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_fc.w_0'], name="cls/predictions/transform/dense/kernel"))
-        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_fc.b_0'], name="cls/predictions/transform/dense/bias"))
-        tf.Variable(tf.convert_to_tensor(params['next_sent_fc.w_0'], name="cls/seq_relationship/output_weights"))
-        tf.Variable(tf.convert_to_tensor(params['next_sent_fc.b_0'], name="cls/seq_relationship/output_bias"))
-        tf.Variable(tf.convert_to_tensor(params['cls_squad_out_w'], name="cls/squad/output_weights"))
-        tf.Variable(tf.convert_to_tensor(params['cls_squad_out_b'], name="cls/squad/output_bias"))
+        tf.Variable(tf.convert_to_tensor(params['mask_lm_out_fc.b_0']), name="cls/predictions/output_bias")
+        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_layer_norm_scale']), name="cls/predictions/transform/LayerNorm/gamma")
+        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_layer_norm_bias']), name="cls/predictions/transform/LayerNorm/beta")
+        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_fc.w_0']), name="cls/predictions/transform/dense/kernel")
+        tf.Variable(tf.convert_to_tensor(params['mask_lm_trans_fc.b_0']), name="cls/predictions/transform/dense/bias")
+        tf.Variable(tf.convert_to_tensor(params['next_sent_fc.w_0']), name="cls/seq_relationship/output_weights")
+        tf.Variable(tf.convert_to_tensor(params['next_sent_fc.b_0']), name="cls/seq_relationship/output_bias")
+        tf.Variable(tf.convert_to_tensor(params['cls_squad_out_w']), name="cls/squad/output_weights")
+        tf.Variable(tf.convert_to_tensor(params['cls_squad_out_b']), name="cls/squad/output_bias")
 
 
 def trans_vocab(bert_vocab_path='checkpoints/vocab.txt'):
