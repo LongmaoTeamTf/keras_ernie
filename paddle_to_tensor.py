@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 21:26:47
+@LastEditTime: 2020-03-12 21:30:29
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -98,8 +98,9 @@ def convert_np_to_tensor(params, training=False):
     tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_scale'], name=f"{tensor_embed_prefix}/LayerNorm/gamma"))
     tf.Variable(tf.convert_to_tensor(params['pre_encoder_layer_norm_bias'], name=f"{tensor_embed_prefix}/LayerNorm/beta"))
     tf.Variable(tf.convert_to_tensor(params['pos_embedding'], name=f"{tensor_embed_prefix}/position_embeddings"))
-    tf.Variable(tf.convert_to_tensor(params['word_embedding'], name="bert/embeddings/word_embeddings"))
+    tf.Variable(tf.convert_to_tensor(params['word_embedding'], name=f"{tensor_embed_prefix}/word_embeddings"))
     tf.Variable(tf.convert_to_tensor(params['sent_embedding'], name=f"{tensor_embed_prefix}/token_type_embeddings"))
+    
     # Layers
     tensor_encoder_prefix = f"{tensor_prefix}/encoder/layer_"
     for x in range(12):
