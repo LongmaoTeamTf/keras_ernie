@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 20:56:00
+@LastEditTime: 2020-03-12 21:00:07
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -171,8 +171,8 @@ def convert_np_to_tensor(params, training=False):
 
 
 def trans_vocab(bert_vocab_path='checkpoints/vocab.txt'):
-     with open(args.ernie_vocab_path, 'r', 'utf8') as fr:
-         with open(bert_vocab_path, 'w', 'utf8') as fw:
+     with open(args.ernie_vocab_path, 'r', encoding='utf8') as fr:
+         with open(bert_vocab_path, 'w', encoding='utf8') as fw:
              for line in fr:
                  word = line.split('\t')[0]
                  fw.write(f"{word}\n")
@@ -197,7 +197,7 @@ def add_bert_config(bert_config_path='checkpoints/bert_config.json'):
         "pooler_type": "first_token_transform",
         "type_vocab_size": 2,
         "vocab_size": 18000}
-    with open(bert_config_path, 'w') as f:
+    with open(bert_config_path, 'w', encoding='utf8') as f:
         f.write(json.dumps(bert_config))
 
 
