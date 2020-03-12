@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:34:56
+@LastEditTime: 2020-03-12 18:42:51
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -42,7 +42,7 @@ def convert_paddle_to_np(ernie_path, max_seq_len=128, num_labels=2, use_fp16=Fal
     init_checkpoint = check_exists(os.path.join(ernie_path, 'params'))
     ernie_config_path = check_exists(os.path.join(ernie_path, 'ernie_config.json'))
 
-    class args(object):
+    class args:
         init_checkpoint = init_checkpoint
         ernie_config_path = ernie_config_path
         max_seq_len =  max_seq_len
