@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:23:01
+@LastEditTime: 2020-03-12 18:31:37
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -25,7 +25,9 @@ from finetune.classifier import create_model
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
-tf.config.experimental.get_visible_devices()
+gpus = tf.config.experimental.get_visible_devices(devices_type='GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
 
 
 def check_exists(filepath):
@@ -40,15 +42,14 @@ def convert_paddle_to_np(ernie_path, max_seq_len=128, num_labels=2, use_fp16=Fal
     init_checkpoint = check_exists(os.path.join(ernie_path, 'params'))
     ernie_config_path = check_exists(os.path.join(ernie_path, 'ernie_config.json'))
 
-    args = {
-        "init_checkpoint": init_checkpoint,
-        "ernie_config_path": ernie_config_path, 
-        "max_seq_len": max_seq_len,
-        "num_labels": num_labels,
-        "use_fp16": use_fp16
-    }
+    class args(object):
+        init_checkpoint = init_checkpoint
+        ernie_config_path = ernie_config_path
+        max_seq_len =  max_seq_len
+        num_labels = num_labels
+        use_fp16 = use_fp16
 
-    ernie_config = ErnieConfig(args.get('ernie_config_path'))
+    ernie_config = ErnieConfig(args.ernie_config_path)
     ernie_config.print_config()
 
     place = fluid.CPUPlace()
@@ -68,13 +69,13 @@ def convert_paddle_to_np(ernie_path, max_seq_len=128, num_labels=2, use_fp16=Fal
     exe.run(startup_prog)
     init_pretraining_params(
                     exe,   
-                    args.get('init_checkpoint'),
+                    args.init_checkpoint,
                     main_program=test_program,
                     #main_program=startup_prog,
-                    use_fp16=args.get('use_fp16'))
+                    use_fp16=args.use_fp16)
 
     name2params = {}
-    prefix = args.get('init_checkpoint')
+    prefix = args.init_checkpoint
     for var in startup_prog.list_vars():
         path = os.path.join(prefix, var.name)
         if os.path.exists(path):
