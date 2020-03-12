@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:52:52
+@LastEditTime: 2020-03-12 19:03:59
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -167,7 +167,7 @@ def convert_np_to_tensor(params, training=False):
         tf.Variable(tf.convert_to_tensor(params['cls_squad_out_b'], name="cls/squad/output_bias"))
 
 
-def save_tensor(paddle_params_np):
+def save_tensor(paddle_params_np='params.dict'):
     params = joblib.load(paddle_params_np)
     graph = tf.compat.v1.Graph()
     with graph.as_default():
@@ -186,4 +186,4 @@ def save_tensor(paddle_params_np):
 
 if __name__ == "__main__":
     convert_paddle_to_np()
-    save_tensor('params.dict')
+    save_tensor()
