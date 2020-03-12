@@ -5,13 +5,14 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 19:29:33
+@LastEditTime: 2020-03-12 20:56:00
 '''
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import os
+import json
 import shutil
 import joblib
 import argparse
@@ -27,6 +28,7 @@ from finetune.classifier import create_model
 parser = argparse.ArgumentParser()
 parser.add_argument("--init_checkpoint", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/params', type=str, help=".")
 parser.add_argument("--ernie_config_path", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/ernie_config.json', type=str, help=".")
+parser.add_argument("--ernie_vocab_path", default='/media/xddz/xddz/data/ERNIE_stable-1.0.1/vocab.txt', type=str, help=".")
 parser.add_argument("--max_seq_len", default=128, type=int, help=".")
 parser.add_argument("--num_labels", default=2, type=int, help=".")
 parser.add_argument("--use_fp16", type=bool, default=False, help="Whether to use fp16 mixed precision training.")
@@ -168,6 +170,37 @@ def convert_np_to_tensor(params, training=False):
         tf.Variable(tf.convert_to_tensor(params['cls_squad_out_b'], name="cls/squad/output_bias"))
 
 
+def trans_vocab(bert_vocab_path='checkpoints/vocab.txt'):
+     with open(args.ernie_vocab_path, 'r', 'utf8') as fr:
+         with open(bert_vocab_path, 'w', 'utf8') as fw:
+             for line in fr:
+                 word = line.split('\t')[0]
+                 fw.write(f"{word}\n")
+
+
+def add_bert_config(bert_config_path='checkpoints/bert_config.json'):
+    bert_config = {
+        "attention_probs_dropout_prob": 0.1,
+        "directionality": "bidi",
+        "hidden_act": "relu",
+        "hidden_dropout_prob": 0.1,
+        "hidden_size": 768,
+        "initializer_range": 0.02,
+        "intermediate_size": 3072,
+        "max_position_embeddings": 513,
+        "num_attention_heads": 12,
+        "num_hidden_layers": 12,
+        "pooler_fc_size": 768,
+        "pooler_num_attention_heads": 12,
+        "pooler_num_fc_layers": 3,
+        "pooler_size_per_head": 128,
+        "pooler_type": "first_token_transform",
+        "type_vocab_size": 2,
+        "vocab_size": 18000}
+    with open(bert_config_path, 'w') as f:
+        f.write(json.dumps(bert_config))
+
+
 def save_tensor(paddle_params_np='params.dict'):
     params = joblib.load(paddle_params_np)
     graph = tf.compat.v1.Graph()
@@ -182,9 +215,9 @@ def save_tensor(paddle_params_np='params.dict'):
                 if not os.path.exists(checkpoint_dir):
                     os.makedirs(checkpoint_dir)
                 saver.save(sess, checkpoint_prefix)
-    shutil.copyfile(args.ernie_config_path, os.path.join(checkpoint_dir, 'bert_config.json'))
-
-
+            trans_vocab()
+            add_bert_config()
+    
 
 if __name__ == "__main__":
     convert_paddle_to_np()
