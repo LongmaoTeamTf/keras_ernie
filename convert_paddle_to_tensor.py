@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 16:41:19
+@LastEditTime: 2020-03-12 17:47:42
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -178,3 +178,10 @@ def save_tensor(paddle_params_np):
                 if not os.path.exists(checkpoint_dir):
                     os.makedirs(checkpoint_dir)
                 saver.save(sess, checkpoint_prefix)
+
+
+
+if __name__ == "__main__":
+    ernie_path = '/media/xddz/xddz/data/ERNIE_stable-1.0.1'
+    convert_paddle_to_np(ernie_path)
+    save_tensor('params.dict')
