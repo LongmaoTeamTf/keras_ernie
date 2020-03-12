@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:20:23
+@LastEditTime: 2020-03-12 18:23:01
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -34,7 +34,7 @@ def check_exists(filepath):
     return filepath
 
 
-def convert_paddle_to_np(ernie_path, max_seq_length=128, num_labels=2, use_fp16=False, **options):
+def convert_paddle_to_np(ernie_path, max_seq_len=128, num_labels=2, use_fp16=False, **options):
 
     ernie_path = check_exists(ernie_path)
     init_checkpoint = check_exists(os.path.join(ernie_path, 'params'))
@@ -43,7 +43,7 @@ def convert_paddle_to_np(ernie_path, max_seq_length=128, num_labels=2, use_fp16=
     args = {
         "init_checkpoint": init_checkpoint,
         "ernie_config_path": ernie_config_path, 
-        "max_seq_length": max_seq_length,
+        "max_seq_len": max_seq_len,
         "num_labels": num_labels,
         "use_fp16": use_fp16
     }
