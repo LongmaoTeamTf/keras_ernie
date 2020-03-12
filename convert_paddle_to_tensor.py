@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:50:52
+@LastEditTime: 2020-03-12 18:52:52
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -135,7 +135,7 @@ def convert_np_to_tensor(params, training=False):
             params[f"{fluid_prefix}_ffn_fc_0.w_0"], 
             name=f"{tensor_encoder_prefix}{x}/intermediate/dense/kernel"))
         tf.Variable(tf.convert_to_tensor(
-            params[f"{fluid_prefix}__ffn_fc_0.b_0"], 
+            params[f"{fluid_prefix}_ffn_fc_0.b_0"], 
             name=f"{tensor_encoder_prefix}{x}/intermediate/dense/bias"))
         tf.Variable(tf.convert_to_tensor(
             params[f"{fluid_prefix}_post_ffn_layer_norm_scale"], 
