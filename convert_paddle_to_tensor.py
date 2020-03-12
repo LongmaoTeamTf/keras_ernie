@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-12 18:31:37
+@LastEditTime: 2020-03-12 18:34:56
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -25,7 +25,7 @@ from finetune.classifier import create_model
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
-gpus = tf.config.experimental.get_visible_devices(devices_type='GPU')
+gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
