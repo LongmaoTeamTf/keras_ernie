@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 13:03:31
+@LastEditTime: 2020-03-13 14:21:41
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -20,9 +20,9 @@ import numpy as np
 import tensorflow as tf
 
 import paddle.fluid as fluid
-from model.ernie import ErnieConfig
-from utils.init import init_checkpoint, init_pretraining_params
-from finetune.classifier import create_model
+from .model.ernie import ErnieConfig
+from .utils.init import init_checkpoint, init_pretraining_params
+from .finetune.classifier import create_model
 
 
 parser = argparse.ArgumentParser()
