@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 18:41:59
+@LastEditTime: 2020-03-13 18:52:37
 '''
 import os
 import tensorflow as tf
@@ -13,7 +13,7 @@ from .convert import check_exists
 from .convert import convert_paddle_to_tensor
 from keras_bert import load_trained_model_from_checkpoint
 
-
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 class ErnieArgs(object):
     
