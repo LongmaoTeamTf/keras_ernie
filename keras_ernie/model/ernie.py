@@ -26,7 +26,7 @@ import paddle.fluid as fluid
 from io import open
 from paddle.fluid.layers import core
 
-from .model.transformer_encoder import encoder, pre_process_layer
+from .transformer_encoder import encoder, pre_process_layer
 
 log = logging.getLogger(__name__)
 
