@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-13 13:15:42
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 13:58:56
+@LastEditTime: 2020-03-13 14:05:27
 '''
 import os
 import re
@@ -45,9 +45,9 @@ setup(
     long_description=read_file('README.md'),
     long_description_content_type='text/markdown',
     install_requires=get_requirements('requirements.txt'),
-    classifiers=(
+    classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ),
+    ],
 )
