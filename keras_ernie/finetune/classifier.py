@@ -27,7 +27,7 @@ from scipy.stats import pearsonr, spearmanr
 from six.moves import xrange
 import paddle.fluid as fluid
 
-from model.ernie import ErnieModel
+from .model.ernie import ErnieModel
 
 log = logging.getLogger(__name__)
 
