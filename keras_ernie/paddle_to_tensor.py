@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 00:40:39
+@LastEditTime: 2020-03-13 13:03:31
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -29,6 +29,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--init_checkpoint", default='/root/ERNIE_stable-1.0.1/params', type=str, help=".")
 parser.add_argument("--ernie_config_path", default='/root/ERNIE_stable-1.0.1/ernie_config.json', type=str, help=".")
 parser.add_argument("--ernie_vocab_path", default='/root/ERNIE_stable-1.0.1/vocab.txt', type=str, help=".")
+parser.add_argument("--ernie_version", default='stable-1.0.1', type=str, help=".")
 parser.add_argument("--max_seq_len", default=128, type=int, help=".")
 parser.add_argument("--num_labels", default=2, type=int, help=".")
 parser.add_argument("--use_fp16", type=bool, default=False, help="Whether to use fp16 mixed precision training.")
@@ -223,7 +224,7 @@ def save_tensor(paddle_params_dict_path: str, checkpoint_dir: str) -> None:
     
 
 if __name__ == "__main__":
-    ernie_version = "stable-1.0.1"
+    ernie_version = args.ernie_version
     checkpoints_dir = os.path.join('tmp', f"ernie_{ernie_version}")
     if not os.path.exists(checkpoints_dir):
         os.makedirs(checkpoints_dir)
