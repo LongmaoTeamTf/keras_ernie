@@ -5,15 +5,15 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 00:48:52
+@LastEditTime: 2020-03-13 14:20:29
 '''
 import os
 import tensorflow as tf
 from keras_bert import load_trained_model_from_checkpoint
-from paddle_to_tensor import check_exists
-from paddle_to_tensor import convert_paddle_to_dict
-from paddle_to_tensor import save_tensor
-from paddle_to_tensor import trans_vocab, add_bert_config
+from .paddle_to_tensor import check_exists
+from .paddle_to_tensor import convert_paddle_to_dict
+from .paddle_to_tensor import save_tensor
+from .paddle_to_tensor import trans_vocab, add_bert_config
 
 
 class ErnieArgs(object):
