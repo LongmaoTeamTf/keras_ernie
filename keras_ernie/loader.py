@@ -5,32 +5,44 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 14:20:29
+@LastEditTime: 2020-03-13 18:41:59
 '''
 import os
 import tensorflow as tf
+from .convert import check_exists
+from .convert import convert_paddle_to_tensor
 from keras_bert import load_trained_model_from_checkpoint
-from .paddle_to_tensor import check_exists
-from .paddle_to_tensor import convert_paddle_to_dict
-from .paddle_to_tensor import save_tensor
-from .paddle_to_tensor import trans_vocab, add_bert_config
+
 
 
 class ErnieArgs(object):
     
     def __init__(self, init_checkpoint, ernie_config_path, ernie_vocab_path, 
             max_seq_len=128, num_labels=2, use_fp16=False, use_gpu=True, gpu_memory_growth=False):
-        self.init_checkpoint = check_exists(init_checkpoint)
-        self.ernie_config_path = check_exists(ernie_config_path)
-        self.ernie_vocab_path = check_exists(ernie_vocab_path)
+        
+        check_exists(init_checkpoint)
+        check_exists(ernie_config_path)
+        check_exists(ernie_vocab_path)
+
+        self.init_checkpoint = init_checkpoint
+        self.ernie_config_path = ernie_config_path
+        self.ernie_vocab_path = ernie_vocab_path
+        
         self.max_seq_len = max_seq_len
         self.num_labels = num_labels
         self.use_fp16 = use_fp16
         self.use_gpu = use_gpu
         self.gpu_memory_growth = gpu_memory_growth
 
-    
+        if not self.use_gpu:
+            os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
+        if self.gpu_memory_growth:
+            gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+
+    
 def load_from_checkpoint(init_checkpoint, ernie_config_path, ernie_vocab_path, ernie_version,
             max_seq_len=128, num_labels=2, use_fp16=False, use_gpu=True, gpu_memory_growth=False,
             training=False, seq_len=None, name='ernie'):
@@ -40,14 +52,8 @@ def load_from_checkpoint(init_checkpoint, ernie_config_path, ernie_vocab_path, e
             use_gpu=use_gpu, gpu_memory_growth=gpu_memory_growth)
 
     checkpoints_dir = os.path.join('tmp', f"ernie_{ernie_version}")
-    if not os.path.exists(checkpoints_dir):
-        os.makedirs(checkpoints_dir)
-        params_dict_path = os.path.join(checkpoints_dir, 'params.dict')
-        convert_paddle_to_dict(args, params_dict_path)
-        save_tensor(params_dict_path, checkpoints_dir)
-        trans_vocab(args.ernie_vocab_path, os.path.join(checkpoints_dir, "vocab.txt"))
-        add_bert_config(os.path.join(checkpoints_dir, 'bert_config.json'))
-
+    convert_paddle_to_tensor(args, checkpoints_dir)
+    
     bert_config_path = os.path.join(checkpoints_dir, 'bert_config.json')
     bert_checkpoint_path = os.path.join(checkpoints_dir, 'bert_model.ckpt')
 
