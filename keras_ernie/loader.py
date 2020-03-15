@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-15 18:09:21
+@LastEditTime: 2020-03-15 18:34:15
 '''
 import os
 import tensorflow as tf
@@ -13,7 +13,6 @@ from .convert import check_exists
 from .convert import convert_paddle_to_tensor
 from keras_bert import load_trained_model_from_checkpoint
 
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 class ErnieArgs(object):
     
@@ -33,6 +32,8 @@ class ErnieArgs(object):
         self.use_fp16 = use_fp16
         self.use_gpu = use_gpu
         self.gpu_memory_growth = gpu_memory_growth
+
+        os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
         if not self.use_gpu:
             os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
