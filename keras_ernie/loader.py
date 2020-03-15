@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 19:00:08
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 18:52:37
+@LastEditTime: 2020-03-15 18:09:21
 '''
 import os
 import tensorflow as tf
@@ -52,7 +52,8 @@ def load_from_checkpoint(init_checkpoint, ernie_config_path, ernie_vocab_path, e
             use_gpu=use_gpu, gpu_memory_growth=gpu_memory_growth)
 
     checkpoints_dir = os.path.join('tmp', f"ernie_{ernie_version}")
-    convert_paddle_to_tensor(args, checkpoints_dir)
+    if not os.path.exists(checkpoints_dir):
+        convert_paddle_to_tensor(args, checkpoints_dir)
     
     bert_config_path = os.path.join(checkpoints_dir, 'bert_config.json')
     bert_checkpoint_path = os.path.join(checkpoints_dir, 'bert_model.ckpt')
