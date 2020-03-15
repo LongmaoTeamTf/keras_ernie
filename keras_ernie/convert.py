@@ -5,7 +5,7 @@
 @Author: Wang Yao
 @Date: 2020-03-12 15:08:24
 @LastEditors: Wang Yao
-@LastEditTime: 2020-03-13 18:42:17
+@LastEditTime: 2020-03-13 19:29:12
 '''
 from __future__ import absolute_import
 from __future__ import division
@@ -35,7 +35,7 @@ def convert_paddle_to_dict(args: object, dict_path: str) -> None:
     check_exists(args.ernie_config_path)
 
     ernie_config = ErnieConfig(args.ernie_config_path)
-    ernie_config.print_config()
+    # ernie_config.print_config()
 
     place = fluid.CPUPlace()
     exe = fluid.Executor(place)
@@ -64,7 +64,6 @@ def convert_paddle_to_dict(args: object, dict_path: str) -> None:
         path = os.path.join(prefix, var.name)
         if os.path.exists(path):
             cur_tensor = fluid.global_scope().find_var(var.name).get_tensor()
-            print(var.name, np.array(cur_tensor).shape)
             name2params[var.name] = np.array(cur_tensor)
 
     joblib.dump(name2params, dict_path)
