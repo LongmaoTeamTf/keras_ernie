@@ -1,5 +1,5 @@
 numpy==1.16.4
-joblib==0.13.2
+joblib==1.2.0
 paddlepaddle-gpu==1.6.3.post107
 tensorflow-gpu>=2.0.0
 keras-bert==0.80.0
